@@ -4,7 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.InventorySystem.springboot.model.Employee;
 
-public interface EmployeeRepository extends JpaRepository<Employee, Long>{
+import java.util.Optional;
 
+public interface EmployeeRepository extends JpaRepository<Employee, Long>{
+    Optional<Employee> findByEmployeeNumber(String employeeNum);
 }
 

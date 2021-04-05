@@ -3,7 +3,11 @@ package com.InventorySystem.springboot.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.InventorySystem.springboot.Enum.EmployeeRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +18,7 @@ import com.InventorySystem.springboot.repository.EmployeeRepository;
 
 @Service
 @Transactional
-public class EmployeeServiceImpl implements EmployeeService{
+public class EmployeeServiceImpl implements UserDetailsService,EmployeeService{
 
 
 	@Autowired
@@ -23,6 +27,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 
 	@Override
 	public Employee createEmployee(Employee employee) {
+		employee.setEmployeeRole(EmployeeRole.User);
 		return employeeRepository.save(employee);
 	}
 
@@ -72,4 +77,9 @@ public class EmployeeServiceImpl implements EmployeeService{
 
 	}
 
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		return employeeRepository.findByEmployeeNumber(username)
+				.orElseThrow(() -> new ResourceNotFoundException("Employee Doesn't Exist"));
+	}
 }
